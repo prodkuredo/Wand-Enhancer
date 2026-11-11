@@ -18,16 +18,16 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Run build script
         shell: pwsh
         run: |
-          if (Test-Path ".\build.ps1") {
-            .\build.ps1
-          } elseif (Test-Path ".\build.cmd") {
-            .\build.cmd
-          } else {
-            dotnet build Wand-Enhancer.sln -c Release
-          }
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+          .\build.ps1
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -36,6 +36,7 @@ jobs:
           path: |
             **/bin/Release/**/publish/*
             **/bin/Release/**/*
+            dist/*
             *.exe
             *.zip
           if-no-files-found: warn
